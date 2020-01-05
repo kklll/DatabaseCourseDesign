@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deep.dbdesign.mapper.StudentMapper">
+    <select id="getinfo" resultType="com.deep.dbdesign.pojo.Student">
+        select sname,ssex,sclass,stel,semail
+        from student where student.sno=#{username}
+    </select>
+
+    <update id="updateinfo" parameterType="Student">
+        update student set sname=#{sname},ssex=#{ssex},sclass=#{sclass},stel=#{stel},
+        semail=#{semail} where sname=#{sname}
+    </update>
+
+    <select id="getMyGrade" parameterType="java.lang.String" resultType="com.deep.dbdesign.pojo.MyGrade">
+        select Achievement.Sno,Cname,Ctime,laim,Catt,Achievement from
+        Achievement,Course where Achievement.Sno=#{sno} and Achievement.Cno=Course.Cno
+    </select>
+</mapper>

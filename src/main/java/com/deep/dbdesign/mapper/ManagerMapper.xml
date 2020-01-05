@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deep.dbdesign.mapper.ManagerMapper">
+    <insert id="insert" parameterType="SuperClass">
+        insert into ${id}
+        <if test="id =='student'">
+            (sno,sname,ssex,sclass,stel,semail) values(#{superClass.sno},#{superClass.sname},
+            #{superClass.ssex},#{superClass.sclass},#{superClass.stel},#{superClass.semail})
+        </if>
+        <if test="id =='teacher'">
+            (Tname,Tsex,Tdept,Tdegree,Tright,Ttel,Temail,Tusername) values(#{superClass.Tname},#{superClass.Tsex},
+            #{superClass.Tdept},#{superClass.Tdegree},#{superClass.Tright},#{superClass.Ttel},#{superClass.Temail}
+            ,#{superClass.Tusername})
+        </if>
+        <if test="id =='Class'">
+            (Con,Number,Major) values(#{superClass.Con},#{superClass.Number},
+            #{superClass.Major})
+        </if>
+        <if test="id =='teach'">
+            (courseid,teacherid,classid) values((select Cno from Course where
+            #{superClass.Cname}=Course.Cname),(select Tno from teacher where teacher.Tname=#{superClass.Tname}),
+            #{superClass.classid})
+        </if>
+        <if test="id =='Course'">
+            (Ctime,Cname,laim,Catt) values(#{superClass.Ctime},#{superClass.Cname},
+            #{superClass.laim},#{superClass.Catt})
+        </if>
+    </insert>
+    <update id="update" parameterType="SuperClass">
+        update ${id} set
+        <if test="id =='student'">
+            sno=#{superClass.sno},sname=#{superClass.sname},ssex=#{superClass.ssex},sclass=#{superClass.sclass},
+            stel=#{superClass.stel},semail=#{superClass.semail} where sno=#{superClass.sno}
+        </if>
+        <if test="id =='teacher'">
+            Tname=#{superClass.Tname},Tsex=#{superClass.Tsex},Tdept=#{superClass.Tdept},Tdegree=#{superClass.Tdegree},
+            Tright=#{superClass.Tright},Ttel=#{superClass.Ttel},Temail=#{superClass.Temail},
+            Tusername=#{superClass.Tusername}
+            where Tno=#{superClass.Tno}
+        </if>
+        <if test="id =='Class'">
+            Con=#{superClass.classid},Number=#{superClass.Number},Major=#{superClass.Major}
+            where Con=#{superClass.classid}
+        </if>
+        <if test="id =='Achievement'">
+            Sno=#{superClass.Sno},Cno=#{superClass.Cno},Achievement=#{superClass.Achievement}
+            where Sno=#{superClass.Sno}
+        </if>
+        <if test="id =='teach'">
+            courseid=#{superClass.courseid},teacherid=#{superClass.teacherid},classid=#{superClass.classid}
+            where courseid=#{superClass.courseid} and teacherid=#{superClass.teacherid} and
+            classid=#{superClass.classid}
+        </if>
+        <if test="id =='Course'">
+            Ctime=#{superClass.Ctime},Cname=#{superClass.Cname},Catt=#{superClass.Catt},laim=#{superClass.laim}
+            where Cno=#{superClass.Cno}
+        </if>
+    </update>
+    <delete id="delete" parameterType="SuperClass">
+        delete from ${id}
+        <if test="id =='student'">
+            where sno=#{superClass.sno}
+        </if>
+        <if test="id =='Class'">
+            where Con=#{superClass.classid}
+        </if>
+        <if test="id =='teacher'">
+            where Tno=#{superClass.Tno}
+        </if>
+        <if test="id =='Achievement'">
+            where Sno=#{superClass.Sno} and Cno=#{superClass.Cno}
+        </if>
+        <if test="id =='teach'">
+            where courseid=#{superClass.courseid} and teacherid=#{superClass.teacherid} and
+            classid=#{superClass.classid}
+        </if>
+        <if test="id =='Course'">
+            where Cno=#{superClass.Cno}
+        </if>
+    </delete>
+
+    <select id="select" resultType="com.deep.dbdesign.pojo.SuperClass">
+        <if test="id =='Class'">
+            select Con as classid,Number,Major from ${id}
+        </if>
+        <if test="id =='Achievement'">
+            select student.sno,sname,ssex,sclass,Course.Cno, Course.Cname,Achievement.Achievement from
+            Achievement,Course,student where
+            student.sno=Achievement.Sno and Course.Cno=Achievement.Cno
+        </if>
+        <if test="id =='teach'">
+            select courseid,teacherid,classid,Course.Cname,Course.Ctime,Course.Catt,teacher.Tname from
+            teach,Course,teacher where
+            teach.courseid=Course.Cno and teach.teacherid=teacher.Tno
+        </if>
+        <if test="id !='Class' and id !='Achievement' and id!='teach'">
+            select * from ${id}
+        </if>
+    </select>
+</mapper>

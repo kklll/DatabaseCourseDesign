@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deep.dbdesign.mapper.UserMapper">
+    <select id="selectTeacherPassword" resultType="java.lang.String" parameterType="user">
+        select password from teacher where Tusername=#{username}
+    </select>
+    <select id="selectManagerPassword" resultType="java.lang.String" parameterType="user">
+        select password from manager where username=#{username}
+    </select>
+    <select id="selectStudentPassword" resultType="java.lang.String" parameterType="user">
+        select password from student where sno=#{username}
+    </select>
+
+    <update id="changepassword" parameterType="java.lang.String">
+        update ${tablename} set password=#{pass} where
+        <if test="tablename =='manager'">
+            username=#{username};
+        </if>
+        <if test="tablename =='teacher'">
+            Tusername=#{username};
+        </if>
+        <if test="tablename =='student'">
+            sno=#{username};
+        </if>
+    </update>
+</mapper>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-model="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="../static/css/font.css">
+    <link rel="stylesheet" href="../static/css/xadmin.css">
+    <script type="text/javascript" src="../static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../static/js/xadmin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+</head>
+
+
+<!--账号（教师号）、姓名、性别、系别、学历、职称、联系电话、电子邮箱、简介和密码。，-->
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form id="form" class="layui-form" onautocomplete="off" @submit.prevent="sub">
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sname" name="sname" required="" autocomplete="off"
+                           class="layui-input" v-model="sname"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>性别</label>
+                <div class="layui-input-inline">
+                    <select id="ssex" name="ssex" class="valid">
+                        <option v-bind:value="ssex">{{ ssex }}</option>
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                    当前选择: {{ ssex }}
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>班级号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="sclass" name="sclass" required="" autocomplete="off"
+                           class="layui-input" v-model="sclass">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>联系电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="stel" name="stel" required="" autocomplete="off"
+                           class="layui-input" v-model="stel">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="semail" name="semail" required="" lay-verify="email" autocomplete="off"
+                           class="layui-input" v-model="semail">
+                </div>
+                <!--                <div class="layui-form-mid layui-word-aux">-->
+                <!--                    <span class="x-red">*</span>将会成为您唯一的登入名-->
+                <!--                </div>-->
+            </div>
+            <!--            <div class="layui-form-item">-->
+            <!--                <label for="L_username" class="layui-form-label">-->
+            <!--                    <span class="x-red">*</span>昵称</label>-->
+            <!--                <div class="layui-input-inline">-->
+            <!--                    <input type="text" id="L_username" name="username" required=""-->
+            <!--                           autocomplete="off" class="layui-input"></div>-->
+            <!--            </div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <button class="layui-btn" lay-filter="add" lay-submit="">修改</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layer'],
+        function () {
+            $ = layui.jquery;
+            var form = layui.form,
+                layer = layui.layer;
+
+
+            //监听提交
+            form.on('submit(add)',
+                function (data) {
+                    console.log(data);
+                    //发异步，把数据提交给php
+                    $.ajax({
+                        //几个参数需要注意一下
+                        type: "POST",//方法类型
+                        dataType: "json",//预期服务器返回的数据类型
+                        url: "./changeinfo",//url
+                        data: $("#form").serialize(),
+                        success: function (result) {
+                            // 获得frame索引
+                            console.log(result);
+                            if (result.ok != null) {
+                                layer.msg("更新成功！", function () {
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    //关闭当前frame
+                                    parent.layer.close(index);
+                                });
+                            }
+                        },
+                        error:
+                            function () {
+                                layer.msg("发生异常,请重试！");
+                                return false;
+                            }
+                    });
+                    return false;
+                });
+        });
+</script>
+</body>
+<script>
+    const ve = new Vue({
+        el: "#form",
+        data: {
+            sname: null,
+            ssex: null,
+            sclass: null,
+            stel: null,
+            semail: null,
+        },
+        beforeMount: function () {
+            this.getinfo();
+        },
+        methods: {
+            getinfo() {
+                this.$http.get("./getinfo", {}, {emulateJSON: true}).then(function (result) {
+                    console.log(result);
+                    this.sname = result.body.sname;
+                    this.ssex = result.body.ssex;
+                    this.sclass = result.body.sclass;
+                    this.stel = result.body.stel;
+                    this.semail = result.body.semail;
+                }, function () {
+                    layer.msg("信息拉取失败！");
+                })
+            },
+        }
+    })
+</script>
+</html>

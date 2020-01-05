@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:v-html="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns:v-checked="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="../static/css/font.css">
+    <link rel="stylesheet" href="../static/css/xadmin.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../static/js/xadmin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+
+</head>
+
+<body>
+<div class="x-nav">
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <form id="form">
+                    <div class="layui-card-body ">
+                    </div>
+                    <div class="layui-card-body ">
+                        <table class="layui-table layui-form">
+                            <thead>
+                            <tr>
+                                <th>项目名</th>
+                                <th>说明</th>
+                                <th width="80">状态</th>
+                            </thead>
+                            <tbody class="x-cate">
+                            <tr cate-id='1' fid='0'>
+                                <td>
+                                    教师录入与修改成绩开关
+                                </td>
+                                <td>当状态为开启时，教师可以进行成绩的录入与修改。反之不能进行成绩修改与录入</td>
+                                <td>
+                                    <input id="xx" type="checkbox" name="switch" lay-text="开启|停用"
+                                           lay-filter="switchTest" lay-skin="switch">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'], function () {
+        form = layui.form;
+        form.on('switch(switchTest)', function () {
+            // layer.msg(data.value);
+            // $("#status").val(data.value === 1 ? 0 : 1);
+            if (xxxx) {
+                document.getElementById("xx").removeAttribute("checked");
+                xxxx = false;
+            } else {
+                document.getElementById("xx").setAttribute("checked", "");
+                xxxx = true;
+            }
+            const x = document.getElementById("xx").getAttribute("checked");
+            if (x == null) {
+                layer.msg("关闭");
+                $.ajax({
+                    //几个参数需要注意一下
+                    type: "POST",//方法类型
+                    dataType: "json",//预期服务器返回的数据类型
+                    url: "./updatepass",//url
+                    data: {pass:0},
+                    success: function (result) {
+
+                    },
+                    error: function () {
+                        layer.msg("状态上传请刷新后重试！");
+                    }
+                });
+            } else {
+                layer.msg("打开");
+                $.ajax({
+                    //几个参数需要注意一下
+                    type: "POST",//方法类型
+                    dataType: "json",//预期服务器返回的数据类型
+                    url: "./updatepass",//url
+                    data: {pass:1},
+                    success: function (result) {
+
+                    },
+                    error: function () {
+                        layer.msg("状态上传请刷新后重试！");
+                    }
+                });
+            }
+        });
+    });
+
+
+    var xxxx = true;
+    $.ajax({
+        //几个参数需要注意一下
+        type: "POST",//方法类型
+        dataType: "json",//预期服务器返回的数据类型
+        url: "./getpass",//url
+        data: null,
+        success: function (result) {
+            if (result.pass === '1') {
+                document.getElementById("xx").setAttribute("checked", '');
+                xxxx = true;
+            }
+            if (result.pass === '0') {
+                // document.getElementById("xx").setAttribute("unchecked", '');
+                xxxx = false;
+            }
+            // return false;
+        },
+        error: function () {
+            layer.msg("状态请求失败请重试！");
+            return false;
+        }
+    });
+
+
+</script>
+</body>
+</html>

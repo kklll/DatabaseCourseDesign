@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<div id="app">
+    {{ message }}
+</div>
+<div id="app-2">
+  <span v-bind:title="message">
+    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+  </span>
+</div>
+
+<div id="app-3">
+    <p v-if="xxx">现在你看到我了</p>
+</div>
+<div id="app-4">
+    <ol>
+        <li v-for="i in wocao">
+            {{ i.text }}
+        </li>
+    </ol>
+</div>
+<script>
+    // var app4 = new Vue({
+    //         el: "#app-4",
+    //         data: {
+    //             wocao:
+    //                 [
+    //                     {text: "学习Java"},
+    //                     {text: '学习python'},
+    //                     {text: '学习PHP'}
+    //                 ]
+    //         }
+    //     }
+    // );
+    var app4 = new Vue({
+        el: '#app-4',
+        data: {
+            wocao: [
+                {text: '学习 JavaScript'},
+                {text: '学习 Vue'},
+                {text: '整个牛项目'}
+            ]
+        }
+    });
+    var app3 = new Vue({
+        el: '#app-3',
+        data: {
+            xxx: true
+        }
+    });
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!'
+        }
+    });
+    var app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: '页面加载于 ' + new Date().toLocaleString()
+        }
+    })
+</script>
+</body>
+</html>

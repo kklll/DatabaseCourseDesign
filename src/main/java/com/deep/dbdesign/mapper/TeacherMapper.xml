@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deep.dbdesign.mapper.TeacherMapper">
+    <select id="getinfo" resultType="Teacher">
+        select Tname as name ,Tsex as sex ,Tdept as dept,Tdegree as degree,Tright as tright ,Ttel as phone,Temail as email
+        from teacher where Tusername=#{username}
+    </select>
+
+    <update id="updateinfo" parameterType="Teacher">
+        update teacher set Tname=#{name },Tsex=#{sex},Tdept=#{dept},Tdegree=#{degree},
+        Tright=#{tright},Ttel=#{phone},Temail=#{email} where Tname=#{name }
+    </update>
+
+
+    <select id="getTeacherClassInfo" parameterType="java.lang.String" resultType="TeacherClassInfo">
+        select Class.Con,Number,Major,Course.Cname,Course.Ctime,Course.laim,Course.Catt from
+        Class,Course,teach,teacher,SCourse where
+        #{username}=teacher.Tusername and teacher.Tno=teach.teacherid and teach.courseid=Course.Cno
+        and teach.courseid= SCourse.Cno and SCourse.classno=Class.Con and teach.classid=Class.Con
+    </select>
+
+    <select id="getStudentInfo" parameterType="java.lang.String" resultType="Student">
+        select student.sno,sname,ssex,sclass,stel,semail from student
+         where sclass in (
+        select Class.Con as sclass from Class,Course,teach,teacher,SCourse where
+        #{username}=teacher.Tusername and teacher.Tno=teach.teacherid and teach.courseid=Course.Cno
+        and teach.courseid= SCourse.Cno and SCourse.classno=Class.Con and teach.classid=Class.Con);
+    </select>
+
+
+    <!--    String username,String classno,String course-->
+    <select id="getstudentgrade" parameterType="java.lang.String" resultType="Grade">
+        SELECT student.sno,sname,ssex,sclass,Cname,Achievement.Achievement FROM
+        Achievement LEFT JOIN Course ON Achievement.Cno=Course.Cno
+        RIGHT JOIN  student ON student.sno=Achievement.Sno AND Achievement.Cno=Course.Cno
+				AND Course.Cname=#{course}
+            where student.sclass=#{classno}
+    </select>
+
+    <insert id="insertGrade" parameterType="java.util.Map">
+        insert into `Achievement`(sno, cno, achievement) values (#{sno},( select Course.Cno
+        from Course where Course.Cname=#{cno}), #{grade} )
+    </insert>
+
+    <insert id="updateGrade" parameterType="java.util.Map">
+        update `Achievement` set Achievement=#{grade} where Sno=#{sno} and Cno=( select Course.Cno
+        from Course where Course.Cname=#{cno})
+    </insert>
+
+    <select id="getstudentgrade2" parameterType="java.lang.String" resultType="Grade">
+        select student.sno,sname,ssex,sclass,Cname,Achievement.Achievement from student,
+        Achievement,Course,teach,teacher,SCourse,Class
+         where  Course.Cno=Achievement.Cno and Achievement.Sno=student.sno AND
+				#{username}=teacher.Tusername and teacher.Tno=teach.teacherid and
+				teach.courseid=Course.Cno
+				and teach.courseid= SCourse.Cno and SCourse.classno=Class.Con
+				and teach.classid=Class.Con and sclass in (
+        select Class.Con as sclass from Class,Course,teach,teacher,SCourse where
+        #{username}=teacher.Tusername and teacher.Tno=teach.teacherid and
+        teach.courseid=Course.Cno
+        and teach.courseid= SCourse.Cno and
+        SCourse.classno=Class.Con and teach.classid=Class.Con);
+    </select>
+</mapper>

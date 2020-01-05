@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="../static/css/font.css">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="../static/css/xadmin.css">
+    <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../static/js/xadmin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+</head>
+
+<body>
+<div class="x-nav">
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table"
+                           lay-data="{url:'./select?id=Course',page:false,toolbar: '#toolbarDemo',id:'test'}"
+                           lay-filter="test">
+                        <thead>
+                        <tr>
+                            <th lay-data="{type:'checkbox'}">ID</th>
+                            <th lay-data="{field:'cno',width:100, sort: true}">课程编号</th>
+                            <th lay-data="{field:'cname',edit:'text', width:100, sort: true}">课程名</th>
+                            <th lay-data="{field:'ctime', edit:'text',sort: true,minWidth: 100,width:150}">课程学时</th>
+                            <th lay-data="{field:'laim',edit:'text',width:140,sort: true}">考核属性</th>
+                            <th lay-data="{field:'catt', edit:'text',minWidth: 50}">课程属性</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add"> 增加课程</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete"> 删除课程</button>
+    </div>
+</script>
+<script>
+    layui.use('laydate',
+        function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#start' //指定元素
+            });
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#end' //指定元素
+            });
+
+        });
+</script>
+<script>
+    layui.use('table',
+        function () {
+            var table = layui.table;
+
+            //监听单元格编辑
+            table.on('edit(test)',
+                function (obj) {
+                    var value = obj.value //得到修改后的值
+                        ,
+                        data = obj.data //得到所在行所有键值
+                        ,
+                        field = obj.field; //得到字段
+                    update(data)
+                });
+
+            //头工具栏事件
+            table.on('toolbar(test)',
+                function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'delete':
+                            const datadd = checkStatus.data;
+                            // layer.alert(JSON.stringify(data));
+                            if (datadd.length <= 0) {
+                                layer.msg("请选择数据！");
+                                return;
+                            }
+                            for (let i = 0; i < datadd.length; i++) {
+                                $.ajax({
+                                    //几个参数需要注意一下
+                                    type: "POST",//方法类型
+                                    dataType: "json",//预期服务器返回的数据类型
+                                    url: "./delete?id=Course",//url
+                                    data: datadd[i],
+                                    success: function (result) {
+                                        layer.msg("删除成功！", function () {
+                                            location.reload();
+                                        });
+
+                                    },
+                                    error: function () {
+                                        layer.msg("发生异常,请重试！");
+                                    }
+                                });
+                            }
+                            break;
+                        case 'getCheckLength':
+                            var data = checkStatus.data;
+                            layer.msg('选中了：' + data.length + ' 个');
+                            break;
+                        case 'isAll':
+                            layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                            break;
+                        case 'add':
+                            xadmin.open("增加课程", "./addcourse", 600, 450);
+                    }
+                });
+        });
+
+    function update(data) {
+        $.ajax({
+            //几个参数需要注意一下
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "./update?id=Course",//url
+            data: data,
+            success: function (result) {
+                // console.log(result);//打印服务端返回的数据(调试用)
+                layer.msg("修改成功")
+            },
+            error: function () {
+                layer.msg("修改发生异常,请重试！");
+            }
+        });
+    }
+</script>
+</html>

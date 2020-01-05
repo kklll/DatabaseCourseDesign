@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deep.dbdesign.mapper.AchievementDao">
+    <resultMap id="BaseResultMap" type="com.deep.dbdesign.pojo.Achievement">
+        <id column="Sno" jdbcType="VARCHAR" property="sno"/>
+        <id column="Cno" jdbcType="INTEGER" property="cno"/>
+        <result column="Achievement" jdbcType="INTEGER" property="achievement"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    Sno, Cno, Achievement
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="com.deep.dbdesign.pojo.AchievementKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from Achievement
+        where Sno = #{sno,jdbcType=VARCHAR}
+        and Cno = #{cno,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.deep.dbdesign.pojo.AchievementKey">
+    delete from Achievement
+    where Sno = #{sno,jdbcType=VARCHAR}
+      and Cno = #{cno,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" keyColumn="Sno" keyProperty="sno" parameterType="com.deep.dbdesign.pojo.Achievement"
+            useGeneratedKeys="true">
+    insert into Achievement (Cno, Achievement)
+    values (#{cno,jdbcType=INTEGER}, #{achievement,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" keyColumn="Sno" keyProperty="sno" parameterType="com.deep.dbdesign.pojo.Achievement"
+            useGeneratedKeys="true">
+        insert into Achievement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cno != null">
+                Cno,
+            </if>
+            <if test="achievement != null">
+                Achievement,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cno != null">
+                #{cno,jdbcType=INTEGER},
+            </if>
+            <if test="achievement != null">
+                #{achievement,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.deep.dbdesign.pojo.Achievement">
+        update Achievement
+        <set>
+            <if test="achievement != null">
+                Achievement = #{achievement,jdbcType=INTEGER},
+            </if>
+        </set>
+        where Sno = #{sno,jdbcType=VARCHAR}
+        and Cno = #{cno,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.deep.dbdesign.pojo.Achievement">
+    update Achievement
+    set Achievement = #{achievement,jdbcType=INTEGER}
+    where Sno = #{sno,jdbcType=VARCHAR}
+      and Cno = #{cno,jdbcType=INTEGER}
+  </update>
+</mapper>
