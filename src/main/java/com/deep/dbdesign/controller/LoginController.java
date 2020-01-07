@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -25,7 +23,7 @@ public class LoginController {
 
     public static boolean Pass = false;
 
-    //显示界面
+    //显示界面（下面四个都是）
     @RequestMapping(value = "/")
     public String login() {
         return "login";
@@ -41,24 +39,13 @@ public class LoginController {
         return "welcome";
     }
 
-    @RequestMapping("test")
-    @ResponseBody
-    public Map getUser() {
-        List<User> list = new ArrayList<>();
-        User user = new User("学生", "1707004732", "123123");
-        list.add(user);
-        Map map = new HashMap<>();
-        map.put("code", 0);
-        map.put("count", 1);
-        map.put("data", list);
-        return map;
-    }
-
     @RequestMapping("changepassword")
     public String changepassword() {
         return "changepassword";
     }
 
+
+    //更改用户密码
     @RequestMapping("changepassword2")
     @ResponseBody
     public Map changePassword(HttpServletRequest request, String oldpass, String pass1, String pass2) {
@@ -66,7 +53,7 @@ public class LoginController {
         return loginServer.changepassword(user, oldpass, pass1, pass2);
     }
 
-    //post请求验证请求
+    //post请求验证请求，请求登录的逻辑
     @ResponseBody
     @RequestMapping(value = "login2")
     public Map login2(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -103,6 +90,8 @@ public class LoginController {
         return result;
     }
 
+
+    //获取当前用户的用户名
     @ResponseBody
     @RequestMapping("getUsername")
     public Map<String, String> getUsername(HttpServletRequest request) {
@@ -110,6 +99,7 @@ public class LoginController {
         return Tools.toMap("username", user.getUsername());
     }
 
+    //老师是否可以进行成绩的录入
     @ResponseBody
     @RequestMapping("getpass")
     public Map getpass() {

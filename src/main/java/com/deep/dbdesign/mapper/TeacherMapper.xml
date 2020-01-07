@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.deep.dbdesign.mapper.TeacherMapper">
-    <select id="getinfo" resultType="Teacher">
+    <select id="getinfo" resultType="com.deep.dbdesign.pojo.Teacher">
         select Tname as name ,Tsex as sex ,Tdept as dept,Tdegree as degree,Tright as tright ,Ttel as phone,Temail as email
         from teacher where Tusername=#{username}
     </select>
@@ -14,14 +14,14 @@
     </update>
 
 
-    <select id="getTeacherClassInfo" parameterType="java.lang.String" resultType="TeacherClassInfo">
+    <select id="getTeacherClassInfo" parameterType="java.lang.String" resultType="com.deep.dbdesign.pojo.TeacherClassInfo">
         select Class.Con,Number,Major,Course.Cname,Course.Ctime,Course.laim,Course.Catt from
         Class,Course,teach,teacher,SCourse where
         #{username}=teacher.Tusername and teacher.Tno=teach.teacherid and teach.courseid=Course.Cno
         and teach.courseid= SCourse.Cno and SCourse.classno=Class.Con and teach.classid=Class.Con
     </select>
 
-    <select id="getStudentInfo" parameterType="java.lang.String" resultType="Student">
+    <select id="getStudentInfo" parameterType="java.lang.String" resultType="com.deep.dbdesign.pojo.Student">
         select student.sno,sname,ssex,sclass,stel,semail from student
          where sclass in (
         select Class.Con as sclass from Class,Course,teach,teacher,SCourse where
@@ -31,7 +31,7 @@
 
 
     <!--    String username,String classno,String course-->
-    <select id="getstudentgrade" parameterType="java.lang.String" resultType="Grade">
+    <select id="getstudentgrade" parameterType="java.lang.String" resultType="com.deep.dbdesign.pojo.Grade">
         SELECT student.sno,sname,ssex,sclass,Cname,Achievement.Achievement FROM
         Achievement LEFT JOIN Course ON Achievement.Cno=Course.Cno
         RIGHT JOIN  student ON student.sno=Achievement.Sno AND Achievement.Cno=Course.Cno
@@ -49,8 +49,8 @@
         from Course where Course.Cname=#{cno})
     </insert>
 
-    <select id="getstudentgrade2" parameterType="java.lang.String" resultType="Grade">
-        select student.sno,sname,ssex,sclass,Cname,Achievement.Achievement from student,
+    <select id="getstudentgrade2" parameterType="java.lang.String" resultType="com.deep.dbdesign.pojo.Grade">
+        select distinct student.sno,sname,ssex,sclass,Cname,Achievement.Achievement from student,
         Achievement,Course,teach,teacher,SCourse,Class
          where  Course.Cno=Achievement.Cno and Achievement.Sno=student.sno AND
 				#{username}=teacher.Tusername and teacher.Tno=teach.teacherid and

@@ -20,16 +20,4 @@ public interface StudentMapper {
 
     List<MyGrade> getMyGrade(String name);
 
-
-//    List<TeacherClassInfo> getTeacherClassInfo(String username);
-//
-//    List<Student> getStudentInfo(String username);
-//
-//    List<Grade> getstudentgrade(String username, String classno, String course);
-//
-//    void insertGrade(Map<String, Object> x);
-//
-//    List<Grade> getstudentgrade2(String username, String classno, String course);
-//
-//    void updateGrade(Map<String, Object> x);
 }

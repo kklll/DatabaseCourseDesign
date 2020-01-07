@@ -19,12 +19,6 @@
 </head>
 
 <body>
-<!--<div class="x-nav">-->
-<!--    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"-->
-<!--       onclick="location.reload()" title="刷新">-->
-<!--        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>-->
-<!--    </a>-->
-<!--</div>-->
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
@@ -37,14 +31,12 @@
                            lay-filter="test">
                         <thead>
                         <tr>
-                            <!--                            <th lay-data="{type:'checkbox'}">ID</th>-->
                             <th lay-data="{field:'sno', width:100, sort: true}">学号</th>
                             <th lay-data="{field:'sname', width:100, sort: true}">姓名</th>
                             <th lay-data="{field:'ssex', minWidth: 100,width:150}">性别</th>
                             <th lay-data="{field:'sclass',width:140,sort: true}">班级号</th>
                             <th lay-data="{field:'cname', minWidth: 50,width:150}">科目名称</th>
                             <th lay-data="{field:'achievement', sort: true,edit:'text' }">成绩</th>
-                            <!--                            <th lay-data="{field:'备注',edit: 'text'}">备注</th>-->
                         </tr>
                         </thead>
                     </table>
@@ -56,9 +48,6 @@
 </body>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-<!--                <button class="layui-btn layui-btn-sm" lay-event="getCheckData"> 获取选中行数据</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>-->
-        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll"> 是否全选</button>-->
     </div>
 </script>
 <script>
@@ -91,10 +80,7 @@
                         data = obj.data //得到所在行所有键值
                         ,
                         field = obj.field; //得到字段
-                    // layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
-                    insert(data.sno,data.cname,data.achievement,data.sname)
-                    //
-                    // layer.msg(JSON.stringify(data));
+                    insert(data.sno, data.cname, data.achievement, data.sname)
                 });
 
             //头工具栏事件
@@ -116,29 +102,34 @@
                     }
                 });
         });
-    function insert(sno,cno,grade,id) {
-        $.ajax({
-            //几个参数需要注意一下
-            type: "POST",//方法类型
-            dataType: "json",//预期服务器返回的数据类型
-            url: "./insertGrade",//url
-            data: {"sno":sno,"cno":cno,"grade":grade},
-            success: function (result) {
-                // console.log(result);//打印服务端返回的数据(调试用)
-                if (result.ok != null) {
-                    layer.msg(id+'成绩录入成功');
-                    // $(window).attr('location', result.ok);
+
+    function insert(sno, cno, grade, id) {
+        if (grade < 0 || grade > 100) {
+            layer.msg("插入的数据不合理，请更改！");
+        } else {
+            $.ajax({
+                //几个参数需要注意一下
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "./insertGrade",//url
+                data: {"sno": sno, "cno": cno, "grade": grade},
+                success: function (result) {
+                    // console.log(result);//打印服务端返回的数据(调试用)
+                    if (result.ok != null) {
+                        layer.msg(id + '成绩录入成功');
+                        // $(window).attr('location', result.ok);
+                    }
+                    if (result.ok == null) {
+                        layer.msg('数据库错误，请勿在此处更改！')
+                    }
+                    return false;
+                },
+                error: function () {
+                    layer.msg(id + "成绩上传失败,请重试");
+                    return false;
                 }
-                if (result.ok == null) {
-                    layer.msg('数据库错误，请勿在此处更改！')
-                }
-                return false;
-            },
-            error: function () {
-                layer.msg(id+"成绩上传失败,请重试");
-                return false;
-            }
-        });
+            });
+        }
     }
 </script>
 </html>

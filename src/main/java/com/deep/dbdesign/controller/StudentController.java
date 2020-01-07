@@ -45,6 +45,7 @@ public class StudentController {
         return "student/info";
     }
 
+    //    获取个人信息
     @RequestMapping("getinfo")
     @ResponseBody
     public Student getinfo(HttpServletRequest request) {
@@ -53,6 +54,7 @@ public class StudentController {
     }
 
 
+    //    改变个人信息
     @RequestMapping(value = "changeinfo")
     @ResponseBody
     public Map changeinfo(Student student) {
@@ -61,11 +63,13 @@ public class StudentController {
         return Tools.toMap("ok", "xxxx");
     }
 
+    //请求我的成绩页面
     @RequestMapping("mygrade")
     public String mygrade() {
         return "student/mygrade";
     }
 
+    //我的成绩数据
     @RequestMapping("mygrade1")
     @ResponseBody
     public Map getStudentInfo(HttpServletRequest request) {
@@ -78,6 +82,7 @@ public class StudentController {
         return result;
     }
 
+    //    获取用户名
     public String getName(HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute("session");
         return user.getUsername();

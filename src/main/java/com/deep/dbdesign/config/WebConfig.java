@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
+    //添加拦截器
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ManagerInterceptor()).addPathPatterns("/managers/**");
         registry.addInterceptor(new StudentInterceptor()).addPathPatterns("/student/**");
@@ -18,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    //静态资源
+    //静态资源访问配置（不配置的话不能访问js，css）
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }

@@ -29,6 +29,7 @@ public class TeacherController {
     @Autowired
     private TeacherMapper teacherMapper = null;
 
+    //获取页面
     @RequestMapping("index")
     public String getPage() {
         return "teacher/index";
@@ -44,62 +45,9 @@ public class TeacherController {
         return "teacher/info";
     }
 
-
-    @RequestMapping("getinfo")
-    @ResponseBody
-    public Teacher getinfo(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("session");
-        return teacherServer.getinfo(user.getUsername());
-    }
-
-
-    @RequestMapping(value = "changeinfo", method = RequestMethod.POST)
-    @ResponseBody
-    public Map changeinfo(Teacher teacher) {
-        teacherServer.updateInfo(teacher);
-        System.out.println(teacher);
-        return Tools.toMap("ok", "xxxx");
-    }
-
-    @RequestMapping("getTeacherClassInfo")
-    @ResponseBody
-    public Map getTeacherClassInfo(HttpServletRequest request) {
-        String name = getName(request);
-        List list = teacherServer.getTeacherClassInfo(name);
-        Map result = new HashMap();
-        result.put("code", "0");
-        result.put("count", list.size());
-        result.put("data", list);
-        return result;
-    }
-
-
-    public String getName(HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute("session");
-        return user.getUsername();
-    }
-
     @RequestMapping("classmanagement")
     public String getManagePage() {
         return "teacher/classmanagement";
-    }
-
-
-    @RequestMapping("classinfo")
-    public String getpages() {
-        return "teacher/class";
-    }
-
-    @RequestMapping("studentinfo")
-    @ResponseBody
-    public Map getStudentInfo(HttpServletRequest request) {
-        String name = getName(request);
-        List list = teacherServer.getStudentInfo(name);
-        Map result = new HashMap();
-        result.put("code", "0");
-        result.put("count", list.size());
-        result.put("data", list);
-        return result;
     }
 
     @RequestMapping("gradein")
@@ -112,12 +60,70 @@ public class TeacherController {
         return "teacher/qugrades";
     }
 
+    @RequestMapping("classinfo")
+    public String getpages() {
+        return "teacher/class";
+    }
+
+
+    //获取个人信息
+    @RequestMapping("getinfo")
+    @ResponseBody
+    public Teacher getinfo(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("session");
+        return teacherServer.getinfo(user.getUsername());
+    }
+
+    //更改个人信息
+    @RequestMapping(value = "changeinfo", method = RequestMethod.POST)
+    @ResponseBody
+    public Map changeinfo(Teacher teacher) {
+        teacherServer.updateInfo(teacher);
+        System.out.println(teacher);
+        return Tools.toMap("ok", "xxxx");
+    }
+
+    //获取当前教师教的班级
+    @RequestMapping("getTeacherClassInfo")
+    @ResponseBody
+    public Map getTeacherClassInfo(HttpServletRequest request) {
+        String name = getName(request);
+        List list = teacherServer.getTeacherClassInfo(name);
+        Map result = new HashMap();
+        result.put("code", "0");
+        result.put("count", list.size());
+        result.put("data", list);
+        return result;
+    }
+
+    //获取当前用户名
+    public String getName(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("session");
+        return user.getUsername();
+    }
+
+    //老师教授班级的学生信息
+    @RequestMapping("studentinfo")
+    @ResponseBody
+    public Map getStudentInfo(HttpServletRequest request) {
+        String name = getName(request);
+        List list = teacherServer.getStudentInfo(name);
+        Map result = new HashMap();
+        result.put("code", "0");
+        result.put("count", list.size());
+        result.put("data", list);
+        return result;
+    }
+
+
+    //老师教授班级的学生成绩
     @RequestMapping("getstudentgrade")
     @ResponseBody
     public Map getstudentgrade(HttpServletRequest request, String classno, String coursename) {
         return teacherServer.getstudentgrade(getName(request), classno, coursename);
     }
 
+    //增加成绩
     @RequestMapping("insertGrade")
     @ResponseBody
     public Map insertGrade(String sno, String cno, Integer grade) {
@@ -125,6 +131,7 @@ public class TeacherController {
         return Tools.toMap("ok", "ok");
     }
 
+    //更改成绩
     @RequestMapping("updetegrade")
     @ResponseBody
     public Map updateGrade(String sno, String cno, Integer grade) {
@@ -132,12 +139,13 @@ public class TeacherController {
         return Tools.toMap("ok", "ok");
     }
 
-
+    //查询成绩
     @RequestMapping("qugrade1")
     public String updetegrade1() {
         return "teacher/qugrade";
     }
 
+    //查询成绩
     @ResponseBody
     @RequestMapping("qugrade2")
     public Map updetegrade2(HttpServletRequest request, String classno, String coursename) {

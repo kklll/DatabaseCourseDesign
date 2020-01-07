@@ -23,6 +23,7 @@ public class ManagerController {
     @Autowired
     private ManagerServer managerServer = null;
 
+    //显示页面
     @RequestMapping("index")
     public String getPage() {
         return "managers/index";
@@ -93,6 +94,7 @@ public class ManagerController {
         return "managers/cate";
     }
 
+    //获取是否可以进行成绩录入
     @RequestMapping("getpass")
     @ResponseBody
     public Map getpass() {
@@ -102,6 +104,7 @@ public class ManagerController {
             return Tools.toMap("pass", "0");
     }
 
+    //更改密码
     @RequestMapping("updatepass")
     @ResponseBody
     public Map updatepass(int pass) {
@@ -114,6 +117,7 @@ public class ManagerController {
         return Tools.toMap("ok", "ok");
     }
 
+    //获取数据
     @RequestMapping("select")
     @ResponseBody
     public Map select(String id) {
@@ -125,6 +129,7 @@ public class ManagerController {
         return result;
     }
 
+    //增加数据
     @RequestMapping("insert")
     @ResponseBody
     public Map insert(SuperClass superClass, String id) {
@@ -132,6 +137,7 @@ public class ManagerController {
         return Tools.toMap("ok", "ok");
     }
 
+    //更新数据
     @RequestMapping("update")
     @ResponseBody
     public Map update(SuperClass superClass, String id) {
@@ -139,6 +145,7 @@ public class ManagerController {
         return Tools.toMap("ok", "ok");
     }
 
+    //删除数据
     @RequestMapping("delete")
     @ResponseBody
     public Map delete(SuperClass superClass, String id) {

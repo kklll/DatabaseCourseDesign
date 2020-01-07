@@ -19,12 +19,12 @@
 </head>
 
 <body>
-<!--<div class="x-nav">-->
-<!--    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"-->
-<!--       onclick="location.reload()" title="刷新">-->
-<!--        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>-->
-<!--    </a>-->
-<!--</div>-->
+<div class="x-nav">
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
 <div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
@@ -125,27 +125,28 @@
             url: "../getpass",//url
             data: null,
             success: function (result) {
-                // console.log(result);//打印服务端返回的数据(调试用)
                 if (result.pass === 1) {
-                    $.ajax({
-                        //几个参数需要注意一下
-                        type: "POST",//方法类型
-                        dataType: "json",//预期服务器返回的数据类型
-                        url: "./updetegrade",//url
-                        data: {"sno": sno, "cno": cno, "grade": grade},
-                        success: function (result) {
-                            // console.log(result);//打印服务端返回的数据(调试用)
-                            if (result.ok != null) {
-                                layer.msg(id + '成绩修改成功');
-                                // $(window).attr('location', result.ok);
+                    if (grade < 0 || grade > 100) {
+                        layer.msg("插入数据不合理，请检查！")
+                    } else {
+                        $.ajax({
+                            //几个参数需要注意一下
+                            type: "POST",//方法类型
+                            dataType: "json",//预期服务器返回的数据类型
+                            url: "./updetegrade",//url
+                            data: {"sno": sno, "cno": cno, "grade": grade},
+                            success: function (result) {
+                                if (result.ok != null) {
+                                    layer.msg(id + '成绩修改成功');
+                                }
+                                return false;
+                            },
+                            error: function () {
+                                layer.msg(id + "成绩修改失败,请重试");
+                                return false;
                             }
-                            return false;
-                        },
-                        error: function () {
-                            layer.msg(id + "成绩修改失败,请重试");
-                            return false;
-                        }
-                    });
+                        });
+                    }
                 } else {
                     layer.msg(result.msg)
                 }

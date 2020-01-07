@@ -9,7 +9,8 @@ import java.util.List;
  * Created by Deep on 2020/1/5 12:54
  */
 @Mapper
-public interface ManagerMapper {
+public interface
+ManagerMapper {
     List<SuperClass> select(String id);
 
     void insert(SuperClass superClass,String id);

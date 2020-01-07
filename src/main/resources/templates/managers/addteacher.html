@@ -115,17 +115,7 @@
                     <input type="text" id="email" name="Temail" required="" lay-verify="email" autocomplete="off"
                            class="layui-input" >
                 </div>
-                <!--                <div class="layui-form-mid layui-word-aux">-->
-                <!--                    <span class="x-red">*</span>将会成为您唯一的登入名-->
-                <!--                </div>-->
             </div>
-            <!--            <div class="layui-form-item">-->
-            <!--                <label for="L_username" class="layui-form-label">-->
-            <!--                    <span class="x-red">*</span>昵称</label>-->
-            <!--                <div class="layui-input-inline">-->
-            <!--                    <input type="text" id="L_username" name="username" required=""-->
-            <!--                           autocomplete="off" class="layui-input"></div>-->
-            <!--            </div>-->
             <div class="layui-form-item">
                 <label class="layui-form-label"></label>
                 <button class="layui-btn" lay-filter="add" lay-submit="">增加</button>
@@ -160,6 +150,7 @@
                                     var index = parent.layer.getFrameIndex(window.name);
                                     //关闭当前frame
                                     parent.layer.close(index);
+                                    location.reload();
                                 });
                             }
                         },
